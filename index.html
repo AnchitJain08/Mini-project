@@ -33,9 +33,39 @@
                     Add Course
                 </button>
             </div>
+             <div id="addStudent" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Add Student</h2>
+                <form id="addStudentForm" class="space-y-4">
+                    <input type="text" id="studentNo" placeholder="Student Number" class="w-full px-3 py-2 border rounded">
+                    <input type="text" id="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded">
+                    <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded">
+                    <input type="tel" id="phone" placeholder="Phone" class="w-full px-3 py-2 border rounded">
+                    <select id="course" class="w-full px-3 py-2 border rounded">
+                        <option value="">Select Course</option>
+                    </select>
+                    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded">Save Student</button>
+                </form>
+            </div>
 
-            <!-- Rest of the HTML remains the same -->
-            
+            <div id="searchStudents" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Search Students</h2>
+                <input type="text" id="searchTerm" placeholder="Enter search term" class="w-full px-3 py-2 border rounded mb-4">
+                <button onclick="searchStudents()" class="w-full bg-green-500 text-white py-2 rounded">Search</button>
+                <div id="searchResults" class="mt-4"></div>
+            </div>
+
+            <div id="generateReport" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Course Enrollment Report</h2>
+                <canvas id="reportChart"></canvas>
+            </div>
+
+            <div id="addCourse" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Add Course</h2>
+                <form id="addCourseForm" class="space-y-4">
+                    <input type="text" id="courseName" placeholder="Course Name" class="w-full px-3 py-2 border rounded">
+                    <button type="submit" class="w-full bg-purple-500 text-white py-2 rounded">Add Course</button>
+                </form>
+            </div>
         </div>
     </div>
 
