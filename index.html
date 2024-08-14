@@ -3,152 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System</title>
+    <title>Java-based Student Management System</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <style>
-        .transition-all { transition: all 0.3s ease; }
-        .shadow-hover:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-        .modal { transition: opacity 0.25s ease; }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Student Management System</h1>
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Java-based Student Management System</h1>
         <div class="bg-white rounded-lg shadow-md p-6">
             <div id="menu" class="flex flex-wrap justify-center space-x-4 mb-6">
-                <button onclick="showInputArea()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
+                <button onclick="showSection('addStudent')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
                     Add Student
                 </button>
-                <button onclick="printAllStudents()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
-                    Print All Students
+                <button onclick="showSection('searchStudents')" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
+                    Search Students
                 </button>
-                <button onclick="exitProgram()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
-                    Exit
+                <button onclick="showSection('generateReport')" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
+                    Generate Report
                 </button>
-                <button onclick="showAboutProject()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
-                    About Project
-                </button>
-            </div>
-            <div id="inputArea" class="hidden space-y-4">
-                <input type="text" id="studentNo" placeholder="Enter student number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <input type="text" id="studentName" placeholder="Enter student name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <button onclick="saveStudent()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
-                    Save
+                <button onclick="showSection('addCourse')" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
+                    Add Course
                 </button>
             </div>
-            <div id="outputArea" class="mt-8">
-                <table id="studentTable" class="hidden w-full">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="px-4 py-2 text-left">Student NO</th>
-                            <th class="px-4 py-2 text-left">Student Name</th>
-                        </tr>
-                    </thead>
-                    <tbody id="studentTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
 
-    <!-- Modal -->
-    <div id="aboutModal" class="fixed z-10 inset-0 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                        About Student Management System
-                    </h3>
-                    <div class="mt-2">
-                        <p class="text-sm text-gray-500">
-                            This website is a simple Student Management System that allows users to add student information and view all stored student records. It's built using HTML, CSS (Tailwind), and JavaScript, demonstrating basic CRUD operations and data management in a web application.
-                        </p>
-                        <h4 class="text-md font-medium text-gray-900 mt-4">Java Files:</h4>
-                        <p class="text-sm text-gray-500 mt-2">
-                            <strong>Student.java:</strong> This file defines the Student class, which handles individual student data and file operations. It includes methods for accepting student information, saving it to a file, and printing all student information from the file.
-                        </p>
-                        <p class="text-sm text-gray-500 mt-2">
-                            <strong>StudentMenu.java:</strong> This file contains the main method and manages the program's menu-driven interface. It creates a Student object and provides options to add a student, print all students, or exit the program.
-                        </p>
-                    </div>
-                </div>
-                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                    <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="hideAboutProject()">
-                        Close
-                    </button>
-                </div>
+            <div id="addStudent" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Add Student</h2>
+                <form id="addStudentForm" class="space-y-4">
+                    <input type="text" id="studentNo" placeholder="Student Number" class="w-full px-3 py-2 border rounded">
+                    <input type="text" id="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded">
+                    <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded">
+                    <input type="tel" id="phone" placeholder="Phone" class="w-full px-3 py-2 border rounded">
+                    <select id="course" class="w-full px-3 py-2 border rounded">
+                        <option value="">Select Course</option>
+                    </select>
+                    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded">Save Student</button>
+                </form>
+            </div>
+
+            <div id="searchStudents" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Search Students</h2>
+                <input type="text" id="searchTerm" placeholder="Enter search term" class="w-full px-3 py-2 border rounded mb-4">
+                <button onclick="searchStudents()" class="w-full bg-green-500 text-white py-2 rounded">Search</button>
+                <div id="searchResults" class="mt-4"></div>
+            </div>
+
+            <div id="generateReport" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Course Enrollment Report</h2>
+                <canvas id="reportChart"></canvas>
+            </div>
+
+            <div id="addCourse" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">Add Course</h2>
+                <form id="addCourseForm" class="space-y-4">
+                    <input type="text" id="courseName" placeholder="Course Name" class="w-full px-3 py-2 border rounded">
+                    <button type="submit" class="w-full bg-purple-500 text-white py-2 rounded">Add Course</button>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
+        // This script would typically make AJAX calls to Java servlets
+        // For demonstration, we'll use mock data and functions
+
+        let courses = ['Java Programming', 'Web Development', 'Database Management'];
         let students = [];
-        let isRunning = true;
 
-        function showInputArea() {
-            if (!isRunning) return;
-            document.getElementById('inputArea').classList.remove('hidden');
-            document.getElementById('studentTable').classList.add('hidden');
+        function showSection(sectionId) {
+            document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            if (sectionId === 'generateReport') generateReport();
         }
 
-        function saveStudent() {
-            let studentNo = document.getElementById('studentNo').value;
-            let studentName = document.getElementById('studentName').value;
-            if (studentNo && studentName) {
-                students.push({no: studentNo, name: studentName});
-                showNotification("Student saved successfully!", "success");
-            } else {
-                showNotification("Error: Please fill in all fields.", "error");
-            }
-            document.getElementById('inputArea').classList.add('hidden');
-            document.getElementById('studentNo').value = '';
-            document.getElementById('studentName').value = '';
+        document.getElementById('addStudentForm').onsubmit = function(e) {
+            e.preventDefault();
+            let student = {
+                studentNo: document.getElementById('studentNo').value,
+                studentName: document.getElementById('studentName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                course: document.getElementById('course').value
+            };
+            students.push(student);
+            alert('Student added successfully!');
+            this.reset();
+        };
+
+        document.getElementById('addCourseForm').onsubmit = function(e) {
+            e.preventDefault();
+            let courseName = document.getElementById('courseName').value;
+            courses.push(courseName);
+            alert('Course added successfully!');
+            this.reset();
+            updateCourseDropdown();
+        };
+
+        function searchStudents() {
+            let searchTerm = document.getElementById('searchTerm').value.toLowerCase();
+            let results = students.filter(student => 
+                Object.values(student).some(value => value.toLowerCase().includes(searchTerm))
+            );
+            displaySearchResults(results);
         }
 
-        function printAllStudents() {
-            if (!isRunning) return;
-            let tableBody = document.getElementById('studentTableBody');
-            tableBody.innerHTML = '';
-            students.forEach((student, index) => {
-                let row = tableBody.insertRow();
-                row.className = index % 2 === 0 ? 'bg-gray-100' : 'bg-white';
-                let cell1 = row.insertCell(0);
-                let cell2 = row.insertCell(1);
-                cell1.className = 'border px-4 py-2';
-                cell2.className = 'border px-4 py-2';
-                cell1.textContent = student.no;
-                cell2.textContent = student.name;
+        function displaySearchResults(results) {
+            let resultsDiv = document.getElementById('searchResults');
+            resultsDiv.innerHTML = results.map(student => 
+                `<div class="border p-2 mb-2">
+                    <p><strong>Student No:</strong> ${student.studentNo}</p>
+                    <p><strong>Name:</strong> ${student.studentName}</p>
+                    <p><strong>Email:</strong> ${student.email}</p>
+                    <p><strong>Phone:</strong> ${student.phone}</p>
+                    <p><strong>Course:</strong> ${student.course}</p>
+                </div>`
+            ).join('');
+        }
+
+        function generateReport() {
+            let courseCounts = courses.reduce((acc, course) => {
+                acc[course] = students.filter(student => student.course === course).length;
+                return acc;
+            }, {});
+
+            let ctx = document.getElementById('reportChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(courseCounts),
+                    datasets: [{
+                        label: 'Students per Course',
+                        data: Object.values(courseCounts),
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Students'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Courses'
+                            }
+                        }
+                    }
+                }
             });
-            document.getElementById('studentTable').classList.remove('hidden');
-            document.getElementById('inputArea').classList.add('hidden');
         }
 
-        function exitProgram() {
-            isRunning = false;
-            showNotification("Exiting program...", "info");
-            document.getElementById('menu').classList.add('hidden');
-            document.getElementById('inputArea').classList.add('hidden');
-            document.getElementById('studentTable').classList.add('hidden');
+        function updateCourseDropdown() {
+            let courseSelect = document.getElementById('course');
+            courseSelect.innerHTML = '<option value="">Select Course</option>';
+            courses.forEach(course => {
+                let option = document.createElement('option');
+                option.value = course;
+                option.textContent = course;
+                courseSelect.appendChild(option);
+            });
         }
 
-        function showNotification(message, type) {
-            const notificationArea = document.createElement('div');
-            notificationArea.className = `fixed bottom-4 right-4 px-4 py-2 rounded-md text-white ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'}`;
-            notificationArea.textContent = message;
-            document.body.appendChild(notificationArea);
-            setTimeout(() => {
-                notificationArea.remove();
-            }, 3000);
-        }
-
-        function showAboutProject() {
-            document.getElementById('aboutModal').classList.remove('hidden');
-        }
-
-        function hideAboutProject() {
-            document.getElementById('aboutModal').classList.add('hidden');
-        }
+        // Initialize the course dropdown
+        updateCourseDropdown();
     </script>
 </body>
 </html>
