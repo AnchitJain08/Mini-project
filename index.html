@@ -3,113 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Management System Simulation</title>
+    <title>Student Management System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #output {
-            background-color: #f8f8f8;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            white-space: pre-wrap;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-        }
+        .transition-all { transition: all 0.3s ease; }
+        .shadow-hover:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Student Management System Simulation</h1>
-        <div id="menu">
-            <button onclick="addStudent()">1: Add student</button>
-            <button onclick="printAllStudents()">2: Print all students</button>
-            <button onclick="exitProgram()">3: Exit</button>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Student Management System</h1>
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div id="menu" class="flex justify-center space-x-4 mb-6">
+                <button onclick="showInputArea()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
+                    Add Student
+                </button>
+                <button onclick="printAllStudents()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
+                    Print All Students
+                </button>
+                <button onclick="exitProgram()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
+                    Exit
+                </button>
+            </div>
+            <div id="inputArea" class="hidden space-y-4">
+                <input type="text" id="studentNo" placeholder="Enter student number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <input type="text" id="studentName" placeholder="Enter student name" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="saveStudent()" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
+                    Save
+                </button>
+            </div>
+            <div id="outputArea" class="mt-8">
+                <table id="studentTable" class="hidden w-full">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="px-4 py-2 text-left">Student NO</th>
+                            <th class="px-4 py-2 text-left">Student Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody"></tbody>
+                </table>
+            </div>
         </div>
-        <div id="inputArea" style="display:none;">
-            <input type="text" id="studentNo" placeholder="Enter student number">
-            <input type="text" id="studentName" placeholder="Enter student name">
-            <button onclick="saveStudent()">Save</button>
-        </div>
-        <div id="output"></div>
     </div>
-
     <script>
         let students = [];
         let isRunning = true;
 
-        function addStudent() {
+        function showInputArea() {
             if (!isRunning) return;
-            document.getElementById('inputArea').style.display = 'block';
-            output("Enter the student no:");
+            document.getElementById('inputArea').classList.remove('hidden');
+            document.getElementById('studentTable').classList.add('hidden');
         }
 
         function saveStudent() {
             let studentNo = document.getElementById('studentNo').value;
             let studentName = document.getElementById('studentName').value;
-
             if (studentNo && studentName) {
                 students.push({no: studentNo, name: studentName});
-                output("Save successful...");
+                showNotification("Student saved successfully!", "success");
             } else {
-                output("Error occurred while saving student information..");
+                showNotification("Error: Please fill in all fields.", "error");
             }
-
-            document.getElementById('inputArea').style.display = 'none';
+            document.getElementById('inputArea').classList.add('hidden');
             document.getElementById('studentNo').value = '';
             document.getElementById('studentName').value = '';
         }
 
         function printAllStudents() {
             if (!isRunning) return;
-            output("student NO      student Name");
-            students.forEach(student => {
-                output(`${student.no.padEnd(15)}${student.name}`);
+            let tableBody = document.getElementById('studentTableBody');
+            tableBody.innerHTML = '';
+            students.forEach((student, index) => {
+                let row = tableBody.insertRow();
+                row.className = index % 2 === 0 ? 'bg-gray-100' : 'bg-white';
+                let cell1 = row.insertCell(0);
+                let cell2 = row.insertCell(1);
+                cell1.className = 'border px-4 py-2';
+                cell2.className = 'border px-4 py-2';
+                cell1.textContent = student.no;
+                cell2.textContent = student.name;
             });
-            output("printing successful..");
+            document.getElementById('studentTable').classList.remove('hidden');
+            document.getElementById('inputArea').classList.add('hidden');
         }
 
         function exitProgram() {
             isRunning = false;
-            output("Exiting program...");
-            document.getElementById('menu').style.display = 'none';
+            showNotification("Exiting program...", "info");
+            document.getElementById('menu').classList.add('hidden');
+            document.getElementById('inputArea').classList.add('hidden');
+            document.getElementById('studentTable').classList.add('hidden');
         }
 
-        function output(text) {
-            let outputDiv = document.getElementById('output');
-            outputDiv.innerHTML += text + '\n';
-            outputDiv.scrollTop = outputDiv.scrollHeight;
+        function showNotification(message, type) {
+            const notificationArea = document.createElement('div');
+            notificationArea.className = `fixed bottom-4 right-4 px-4 py-2 rounded-md text-white ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500'}`;
+            notificationArea.textContent = message;
+            document.body.appendChild(notificationArea);
+            setTimeout(() => {
+                notificationArea.remove();
+            }, 3000);
         }
     </script>
 </body>
