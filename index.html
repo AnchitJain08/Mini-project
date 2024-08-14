@@ -33,14 +33,15 @@
                     Add Course
                 </button>
             </div>
-             <div id="addStudent" class="hidden">
+            
+            <div id="addStudent" class="hidden">
                 <h2 class="text-2xl font-bold mb-4">Add Student</h2>
                 <form id="addStudentForm" class="space-y-4">
-                    <input type="text" id="studentNo" placeholder="Student Number" class="w-full px-3 py-2 border rounded">
-                    <input type="text" id="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded">
-                    <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded">
-                    <input type="tel" id="phone" placeholder="Phone" class="w-full px-3 py-2 border rounded">
-                    <select id="course" class="w-full px-3 py-2 border rounded">
+                    <input type="text" id="studentNo" name="studentNo" placeholder="Student Number" class="w-full px-3 py-2 border rounded">
+                    <input type="text" id="studentName" name="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded">
+                    <input type="email" id="email" name="email" placeholder="Email" class="w-full px-3 py-2 border rounded">
+                    <input type="tel" id="phone" name="phone" placeholder="Phone" class="w-full px-3 py-2 border rounded">
+                    <select id="course" name="course" class="w-full px-3 py-2 border rounded">
                         <option value="">Select Course</option>
                     </select>
                     <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded">Save Student</button>
@@ -70,62 +71,48 @@
     </div>
 
     <script>
-        // This script would typically make AJAX calls to Java servlets
-        // For demonstration, we'll use mock data and functions
-
+        // Define the available courses
         let courses = ['Java Programming', 'Web Development', 'Database Management'];
-        let students = [];
 
+        // Function to switch between sections
         function showSection(sectionId) {
             document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById('menu').classList.add('hidden');
             if (sectionId === 'generateReport') generateReport();
         }
 
+        // Add a new student
         document.getElementById('addStudentForm').onsubmit = function(e) {
             e.preventDefault();
-            let student = {
-                studentNo: document.getElementById('studentNo').value,
-                studentName: document.getElementById('studentName').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
-                course: document.getElementById('course').value
-            };
-            students.push(student);
-            alert('Student added successfully!');
-            this.reset();
+
+            const formData = new FormData(this);
+            fetch('/AddStudentServlet', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+            .then(data => {
+                alert(data);
+                this.reset();
+            }).catch(error => console.error('Error:', error));
         };
 
-        document.getElementById('addCourseForm').onsubmit = function(e) {
-            e.preventDefault();
-            let courseName = document.getElementById('courseName').value;
-            courses.push(courseName);
-            alert('Course added successfully!');
-            this.reset();
-            updateCourseDropdown();
-        };
-
+        // Search for students
         function searchStudents() {
-            let searchTerm = document.getElementById('searchTerm').value.toLowerCase();
-            let results = students.filter(student => 
-                Object.values(student).some(value => value.toLowerCase().includes(searchTerm))
-            );
-            displaySearchResults(results);
+            const searchTerm = document.getElementById('searchTerm').value;
+            const formData = new FormData();
+            formData.append('searchTerm', searchTerm);
+
+            fetch('/SearchStudentServlet', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+            .then(data => {
+                document.getElementById('searchResults').innerText = data;
+            }).catch(error => console.error('Error:', error));
         }
 
-        function displaySearchResults(results) {
-            let resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = results.map(student => 
-                `<div class="border p-2 mb-2">
-                    <p><strong>Student No:</strong> ${student.studentNo}</p>
-                    <p><strong>Name:</strong> ${student.studentName}</p>
-                    <p><strong>Email:</strong> ${student.email}</p>
-                    <p><strong>Phone:</strong> ${student.phone}</p>
-                    <p><strong>Course:</strong> ${student.course}</p>
-                </div>`
-            ).join('');
-        }
-
+        // Generate report
         function generateReport() {
             let courseCounts = courses.reduce((acc, course) => {
                 acc[course] = students.filter(student => student.course === course).length;
@@ -165,6 +152,7 @@
             });
         }
 
+        // Update course dropdown with available courses
         function updateCourseDropdown() {
             let courseSelect = document.getElementById('course');
             courseSelect.innerHTML = '<option value="">Select Course</option>';
@@ -175,21 +163,16 @@
                 courseSelect.appendChild(option);
             });
         }
+
+        // Show home menu
         function showHome() {
             document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
             document.getElementById('menu').classList.remove('hidden');
         }
 
-        // Modify the showSection function to hide the menu when showing a section
-        function showSection(sectionId) {
-            document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-            document.getElementById('menu').classList.add('hidden');
-            if (sectionId === 'generateReport') generateReport();
-        }
-
-        // Initialize the course dropdown
+        // Initialize the course dropdown on page load
         updateCourseDropdown();
+
     </script>
 </body>
 </html>
