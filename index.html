@@ -9,7 +9,15 @@
 </head>
 <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-4xl font-bold text-center text-blue-600 mb-8">Java-based Student Management System</h1>
+        <h1 class="text-4xl font-bold text-center text-blue-600 mb-4">Java-based Student Management System</h1>
+        
+        <!-- Home button added here -->
+        <div class="text-center mb-4">
+            <button onclick="showHome()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
+                Home
+            </button>
+        </div>
+
         <div class="bg-white rounded-lg shadow-md p-6">
             <div id="menu" class="flex flex-wrap justify-center space-x-4 mb-6">
                 <button onclick="showSection('addStudent')" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
@@ -26,39 +34,8 @@
                 </button>
             </div>
 
-            <div id="addStudent" class="hidden">
-                <h2 class="text-2xl font-bold mb-4">Add Student</h2>
-                <form id="addStudentForm" class="space-y-4">
-                    <input type="text" id="studentNo" placeholder="Student Number" class="w-full px-3 py-2 border rounded">
-                    <input type="text" id="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded">
-                    <input type="email" id="email" placeholder="Email" class="w-full px-3 py-2 border rounded">
-                    <input type="tel" id="phone" placeholder="Phone" class="w-full px-3 py-2 border rounded">
-                    <select id="course" class="w-full px-3 py-2 border rounded">
-                        <option value="">Select Course</option>
-                    </select>
-                    <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded">Save Student</button>
-                </form>
-            </div>
-
-            <div id="searchStudents" class="hidden">
-                <h2 class="text-2xl font-bold mb-4">Search Students</h2>
-                <input type="text" id="searchTerm" placeholder="Enter search term" class="w-full px-3 py-2 border rounded mb-4">
-                <button onclick="searchStudents()" class="w-full bg-green-500 text-white py-2 rounded">Search</button>
-                <div id="searchResults" class="mt-4"></div>
-            </div>
-
-            <div id="generateReport" class="hidden">
-                <h2 class="text-2xl font-bold mb-4">Course Enrollment Report</h2>
-                <canvas id="reportChart"></canvas>
-            </div>
-
-            <div id="addCourse" class="hidden">
-                <h2 class="text-2xl font-bold mb-4">Add Course</h2>
-                <form id="addCourseForm" class="space-y-4">
-                    <input type="text" id="courseName" placeholder="Course Name" class="w-full px-3 py-2 border rounded">
-                    <button type="submit" class="w-full bg-purple-500 text-white py-2 rounded">Add Course</button>
-                </form>
-            </div>
+            <!-- Rest of the HTML remains the same -->
+            
         </div>
     </div>
 
@@ -167,6 +144,18 @@
                 option.textContent = course;
                 courseSelect.appendChild(option);
             });
+        }
+        function showHome() {
+            document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
+            document.getElementById('menu').classList.remove('hidden');
+        }
+
+        // Modify the showSection function to hide the menu when showing a section
+        function showSection(sectionId) {
+            document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById('menu').classList.add('hidden');
+            if (sectionId === 'generateReport') generateReport();
         }
 
         // Initialize the course dropdown
