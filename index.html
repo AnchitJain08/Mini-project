@@ -70,15 +70,16 @@
     </div>
 
     <script>
-        // This script would typically make AJAX calls to Java servlets
-        // For demonstration, we'll use mock data and functions
-
         let courses = ['Java Programming', 'Web Development', 'Database Management'];
-        let students = [];
+        let students = [
+            { studentNo: '001', studentName: 'John Doe', email: 'john@example.com', phone: '1234567890', course: 'Java Programming' },
+            { studentNo: '002', studentName: 'Jane Smith', email: 'jane@example.com', phone: '0987654321', course: 'Web Development' }
+        ];
 
         function showSection(sectionId) {
             document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
             document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById('menu').classList.add('hidden');
             if (sectionId === 'generateReport') generateReport();
         }
 
@@ -175,17 +176,10 @@
                 courseSelect.appendChild(option);
             });
         }
+
         function showHome() {
             document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
             document.getElementById('menu').classList.remove('hidden');
-        }
-
-        // Modify the showSection function to hide the menu when showing a section
-        function showSection(sectionId) {
-            document.querySelectorAll('div[id]').forEach(div => div.classList.add('hidden'));
-            document.getElementById(sectionId).classList.remove('hidden');
-            document.getElementById('menu').classList.add('hidden');
-            if (sectionId === 'generateReport') generateReport();
         }
 
         // Initialize the course dropdown
