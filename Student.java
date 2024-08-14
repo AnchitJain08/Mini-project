@@ -1,57 +1,62 @@
 import java.io.*;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Student {
-    private final String FILE_NAME="studentdata.txt";
+    private static final String FILE_NAME = "studentdata.txt";
     public String studentNo;
     public String studentName;
-    private boolean acceptStudentInformation(){
-        try{
-            BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Enter the student no:");
-            studentNo=br.readLine();
-            if (studentNo.isEmpty()){
-                System.out.println("please enter student no");
-                return false;
-            }
-            System.out.println("enter the student name : ");
-            studentName=br.readLine();
-            if (studentName.isEmpty()){
-                System.out.println("please enter student name:");
-                return false;
-            }
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        return true;
+    public String email;
+    public String phone;
+    public String course;
+
+    public Student(String studentNo, String studentName, String email, String phone, String course) {
+        this.studentNo = studentNo;
+        this.studentName = studentName;
+        this.email = email;
+        this.phone = phone;
+        this.course = course;
     }
-    public boolean saveStudentInformation(){
-        if (!acceptStudentInformation()){
+
+    public static boolean saveStudent(Student student) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(new File(FILE_NAME), true))) {
+            pw.println(student.studentNo + "," + student.studentName + "," + student.email + "," + student.phone + "," + student.course);
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
             return false;
         }
-        try{
-            PrintWriter pw=new PrintWriter(new FileWriter(new File(FILE_NAME),true));
-            pw.println(studentNo+","+studentName);
-            pw.close();
-        } catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        return true;
     }
-    public boolean printStudentInformation(){
-        try{
-            BufferedReader br=new BufferedReader(new FileReader(FILE_NAME));
-            System.out.println(String.format("%-15s %-40s", "student NO", "student Name"));
-            String dataLine=br.readLine();
-            while (dataLine!=null){
-                String[] data=dataLine.split(",");
-                System.out.println(String.format("%-15s %-40s",data[0],data[1]));
-                dataLine=br.readLine();
+
+    public static List<Student> getAllStudents() {
+        List<Student> students = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(",");
+                if (data.length == 5) {
+                    students.add(new Student(data[0], data[1], data[2], data[3], data[4]));
+                }
             }
-            br.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-        return true;
+        return students;
+    }
+
+    public static List<Student> searchStudents(String searchTerm) {
+        List<Student> allStudents = getAllStudents();
+        List<Student> matchingStudents = new ArrayList<>();
+        for (Student student : allStudents) {
+            if (student.toString().toLowerCase().contains(searchTerm.toLowerCase())) {
+                matchingStudents.add(student);
+            }
+        }
+        return matchingStudents;
+    }
+
+    @Override
+    public String toString() {
+        return studentNo + "," + studentName + "," + email + "," + phone + "," + course;
     }
 }
