@@ -9,7 +9,11 @@ function searchStudents() {
     );
     displaySearchResults(results);
 }
-
+let students = [
+    {studentNo: '001', studentName: 'John Doe', email: 'john@example.com', phone: '123-456-7890', course: 'Java Programming'},
+    {studentNo: '002', studentName: 'Jane Smith', email: 'jane@example.com', phone: '987-654-3210', course: 'Web Development'},
+    // ... more students ...
+];
 function displaySearchResults(results) {
     let resultsDiv = document.getElementById('searchResults');
     if (results.length === 0) {
