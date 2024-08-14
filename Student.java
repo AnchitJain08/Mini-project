@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
 public class Student {
     private static final String FILE_NAME = "studentdata.txt";
     public String studentNo;
@@ -9,7 +8,6 @@ public class Student {
     public String email;
     public String phone;
     public String course;
-
     public Student(String studentNo, String studentName, String email, String phone, String course) {
         this.studentNo = studentNo;
         this.studentName = studentName;
@@ -17,7 +15,6 @@ public class Student {
         this.phone = phone;
         this.course = course;
     }
-
     public static boolean saveStudent(Student student) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(new File(FILE_NAME), true))) {
             pw.println(student.studentNo + "," + student.studentName + "," + student.email + "," + student.phone + "," + student.course);
@@ -27,7 +24,6 @@ public class Student {
             return false;
         }
     }
-
     public static List<Student> getAllStudents() {
         List<Student> students = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(FILE_NAME))) {
@@ -43,7 +39,6 @@ public class Student {
         }
         return students;
     }
-
     public static List<Student> searchStudents(String searchTerm) {
         List<Student> allStudents = getAllStudents();
         List<Student> matchingStudents = new ArrayList<>();
@@ -54,9 +49,8 @@ public class Student {
         }
         return matchingStudents;
     }
-
     @Override
     public String toString() {
-        return "Student No: " + studentNo + ", Name: " + studentName + ", Email: " + email + ", Phone: " + phone + ", Course: " + course;
+        return studentNo + "," + studentName + "," + email + "," + phone + "," + course;
     }
 }
