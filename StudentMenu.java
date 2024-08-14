@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class StudentMenu {
     private static final List<String> courses = new ArrayList<>();
+    private static final String COURSES_FILE = "courses.txt";
 
     public static void main(String[] args) {
+        loadExistingCourses();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
             String select = "";
             do {
@@ -25,9 +27,12 @@ public class StudentMenu {
                         addCourse(br);
                         break;
                     case "5":
+                        viewAllStudents();
+                        break;
+                    case "6":
                         return;
                 }
-            } while (!select.equals("5"));
+            } while (!select.equals("6"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -38,8 +43,9 @@ public class StudentMenu {
         System.out.println("2: Search students");
         System.out.println("3: Generate report");
         System.out.println("4: Add course");
-        System.out.println("5: Exit");
-        System.out.println("Select Number (1-5):");
+        System.out.println("5: View all students");
+        System.out.println("6: Exit");
+        System.out.println("Select Number (1-6):");
     }
 
     private static void addStudent(BufferedReader br) throws IOException {
@@ -53,7 +59,6 @@ public class StudentMenu {
         String phone = br.readLine();
         System.out.println("Enter student course:");
         String course = br.readLine();
-
         Student student = new Student(studentNo, studentName, email, phone, course);
         if (Student.saveStudent(student)) {
             System.out.println("Student saved successfully!");
@@ -89,10 +94,48 @@ public class StudentMenu {
         System.out.println("Enter course name:");
         String courseName = br.readLine();
         if (!courseName.isEmpty()) {
-            courses.add(courseName);
-            System.out.println("Course added successfully!");
+            if (courses.contains(courseName)) {
+                System.out.println("Course already exists.");
+            } else {
+                courses.add(courseName);
+                saveCourses();
+                System.out.println("Course added successfully!");
+            }
         } else {
             System.out.println("Course name cannot be empty.");
+        }
+    }
+
+    private static void viewAllStudents() {
+        List<Student> allStudents = Student.getAllStudents();
+        if (allStudents.isEmpty()) {
+            System.out.println("No students found.");
+        } else {
+            System.out.println("All Students:");
+            for (Student student : allStudents) {
+                System.out.println(student);
+            }
+        }
+    }
+
+    private static void loadExistingCourses() {
+        try (BufferedReader br = new BufferedReader(new FileReader(COURSES_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                courses.add(line.trim());
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading courses: " + e.getMessage());
+        }
+    }
+
+    private static void saveCourses() {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(COURSES_FILE))) {
+            for (String course : courses) {
+                pw.println(course);
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving courses: " + e.getMessage());
         }
     }
 }
