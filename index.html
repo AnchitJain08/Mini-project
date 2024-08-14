@@ -11,7 +11,6 @@
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center text-blue-600 mb-4">Java-based Student Management System</h1>
         
-        <!-- Home button added here -->
         <div class="text-center mb-4">
             <button onclick="showHome()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover">
                 Home
@@ -31,6 +30,9 @@
                 </button>
                 <button onclick="showSection('addCourse')" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
                     Add Course
+                </button>
+                <button onclick="viewAllStudents()" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded transition-all shadow-hover mb-2">
+                    View All Students
                 </button>
             </div>
 
@@ -66,6 +68,11 @@
                     <input type="text" id="courseName" placeholder="Course Name" class="w-full px-3 py-2 border rounded">
                     <button type="submit" class="w-full bg-purple-500 text-white py-2 rounded">Add Course</button>
                 </form>
+            </div>
+
+            <div id="viewAllStudents" class="hidden">
+                <h2 class="text-2xl font-bold mb-4">All Students</h2>
+                <div id="allStudentsList" class="mt-4"></div>
             </div>
         </div>
     </div>
@@ -174,6 +181,27 @@
                 option.textContent = course;
                 courseSelect.appendChild(option);
             });
+        }
+        function viewAllStudents() {
+            showSection('viewAllStudents');
+            fetch('/api/students')
+                .then(response => response.json())
+                .then(students => {
+                    const studentsList = document.getElementById('allStudentsList');
+                    studentsList.innerHTML = students.map(student => 
+                        `<div class="border p-2 mb-2">
+                            <p><strong>Student No:</strong> ${student.studentNo}</p>
+                            <p><strong>Name:</strong> ${student.studentName}</p>
+                            <p><strong>Email:</strong> ${student.email}</p>
+                            <p><strong>Phone:</strong> ${student.phone}</p>
+                            <p><strong>Course:</strong> ${student.course}</p>
+                        </div>`
+                    ).join('');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('allStudentsList').innerHTML = 'Error loading students.';
+                });
         }
 
         updateCourseDropdown();
