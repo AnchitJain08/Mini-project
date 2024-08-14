@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System Simulation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #output {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Management System Simulation</h1>
+        <div id="menu">
+            <button onclick="addStudent()">1: Add student</button>
+            <button onclick="printAllStudents()">2: Print all students</button>
+            <button onclick="exitProgram()">3: Exit</button>
+        </div>
+        <div id="inputArea" style="display:none;">
+            <input type="text" id="studentNo" placeholder="Enter student number">
+            <input type="text" id="studentName" placeholder="Enter student name">
+            <button onclick="saveStudent()">Save</button>
+        </div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        let students = [];
+        let isRunning = true;
+
+        function addStudent() {
+            if (!isRunning) return;
+            document.getElementById('inputArea').style.display = 'block';
+            output("Enter the student no:");
+        }
+
+        function saveStudent() {
+            let studentNo = document.getElementById('studentNo').value;
+            let studentName = document.getElementById('studentName').value;
+
+            if (studentNo && studentName) {
+                students.push({no: studentNo, name: studentName});
+                output("Save successful...");
+            } else {
+                output("Error occurred while saving student information..");
+            }
+
+            document.getElementById('inputArea').style.display = 'none';
+            document.getElementById('studentNo').value = '';
+            document.getElementById('studentName').value = '';
+        }
+
+        function printAllStudents() {
+            if (!isRunning) return;
+            output("student NO      student Name");
+            students.forEach(student => {
+                output(`${student.no.padEnd(15)}${student.name}`);
+            });
+            output("printing successful..");
+        }
+
+        function exitProgram() {
+            isRunning = false;
+            output("Exiting program...");
+            document.getElementById('menu').style.display = 'none';
+        }
+
+        function output(text) {
+            let outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += text + '\n';
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+    </script>
+</body>
+</html>
